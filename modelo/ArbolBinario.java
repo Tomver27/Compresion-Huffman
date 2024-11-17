@@ -7,6 +7,7 @@ package modelo;
 import java.util.ArrayList;
 
 /**
+ * Clase para construir el árbol binario
  *
  * @author Nicolás Moreno
  * @author Julián Nova
@@ -24,6 +25,7 @@ public class ArbolBinario {
 
     private Node root;
 
+    //Clase anidada del nodo
     private class Node {
 
         private int key;
@@ -36,7 +38,12 @@ public class ArbolBinario {
         }
     }
 
-    // Insertar clave y valor y definir la estructura
+    /**
+     * Insertar una llave y un valor nuevo en el arbol
+     *
+     * @param key Llave única para los caracteres
+     * @param val Valor de recurrencia
+     */
     public void put(int key, int val) {
         if (root == null) {
             // Si el árbol está vacío, el primer put establece la raíz
@@ -47,6 +54,13 @@ public class ArbolBinario {
         }
     }
 
+    /**
+     * Insertar una llave y un valor nuevo en el arbol de manera recursiva
+     *
+     * @param x Nodo para direccionar
+     * @param key Llave única para los caracteres
+     * @param val Valor de recurrencia
+     */
     private void put(Node x, int key, int val) {
         if (x.left == null) {
             x.left = new Node(key, val); // Agregar al lado izquierdo
@@ -57,7 +71,11 @@ public class ArbolBinario {
         }
     }
 
-    // Método para insertar un nodo completo como hijo
+    /**
+     * Insertar un nodo nuevo en el arbol
+     *
+     * @param nuevoNodo Nodo a insertar
+     */
     public void put(Node nuevoNodo) {
         if (root == null) {
             root = nuevoNodo; // Si no hay raíz, el nodo dado se convierte en raíz
@@ -66,6 +84,12 @@ public class ArbolBinario {
         }
     }
 
+    /**
+     * Insertar un nodo nuevo en el arbol de manera recursiva
+     *
+     * @param actual Nodo para direccionar
+     * @param nuevoNodo Nodo a insertar
+     */
     private void put(Node actual, Node nuevoNodo) {
         if (actual.left == null) {
             actual.left = nuevoNodo; // Insertar como hijo izquierdo
@@ -75,13 +99,27 @@ public class ArbolBinario {
             System.out.println("Ambos hijos ya están ocupados"); // Si ya tiene ambos hijos
         }
     }
-    
-    public String codigoHuf(int entrada){
+
+    /**
+     * Obtener el código a partir del arbol formado
+     *
+     * @param entrada Código que cambiará recursivamente
+     * @return El código en binario
+     */
+    public String codigoHuf(int entrada) {
         return codigoHuf(entrada, root, "");
     }
-    
-    private String codigoHuf(int entrada, Node n, String salida){
-        if(n == null){
+
+    /**
+     * Obtener el código a partir del arbol formado de manera recursiva
+     *
+     * @param entrada Código que cambiará recursivamente
+     * @param n Nodo para direccionar
+     * @param salida Código que retornará
+     * @return El código en binario
+     */
+    private String codigoHuf(int entrada, Node n, String salida) {
+        if (n == null) {
             return "";
         }
         if ((n.left == null && n.right == null) && n.key == entrada) {
@@ -91,34 +129,31 @@ public class ArbolBinario {
         if (!izq.isEmpty()) {
             return izq;
         }
-        
+
         String der = codigoHuf(entrada, n.right, salida + "1");
         if (!der.isEmpty()) {
             return der;
         }
         return "";
     }
-    
-    public int NF() {
-        return NF(root);
-    }
 
-    private int NF(Node node) {
-        if (node == null) {
-            return 0;
-        }
-        if (node.left != null || node.right != null) {
-            return 1 + NF(node.left) + NF(node.right);
-        }
-        return 0;
-    }
-    
+    /**
+     * Obtener el arbol como lista
+     *
+     * @return El arbol como lista
+     */
     public ArrayList<Integer> arbolList() {
         ArrayList<Integer> lista = new ArrayList<>();
         arbolList(root, lista);
         return lista;
     }
 
+    /**
+     * Obtener el arbol como lista de manera recursiva
+     *
+     * @param node Nodo para direccionar
+     * @param lista Lista con las llaves del arbol
+     */
     private void arbolList(Node node, ArrayList<Integer> lista) {
         if (node == null) {
             return;
@@ -128,18 +163,42 @@ public class ArbolBinario {
         arbolList(node.right, lista); // Recorre el hijo derecho
     }
 
-     public int rootKey() {
+    /**
+     *
+     * @return La llave de la raíz
+     */
+    public int rootKey() {
         return root != null ? root.key : -1;
     }
 
+    /**
+     *
+     * @return El valor de la raíz
+     */
     public int rootVal() {
         return root != null ? root.val : -1;
     }
 
+    /**
+     *
+     * @return La raíz como nodo
+     */
     public Node root() {
         return root;
     }
 
+    /**
+     * Recorrer el arbol en preorder
+     */
+    public void recorridoPreOrderRecursivo() {
+        recorridoPreOrderRecursivo(root);
+    }
+
+    /**
+     * Recorrer el arbol en preorder de manera recursiva
+     *
+     * @param node Nodo para direccionar
+     */
     private void recorridoPreOrderRecursivo(Node node) {
         if (node == null) {
             return;
@@ -149,24 +208,29 @@ public class ArbolBinario {
         recorridoPreOrderRecursivo(node.right);
     }
 
-    public void recorridoPreOrderRecursivo() {
-        recorridoPreOrderRecursivo(root);
-    }
-    
+    /**
+     * Recorrer el arbol con sus hijos en específico de cada nodo
+     */
     public void imprimirArbol() {
         imprimirArbol(root);
     }
 
+    /**
+     * Recorrer el arbol de manera recursiva
+     * @param node Nodo para direccionar
+     */
     private void imprimirArbol(Node node) {
-        if (node == null) return;
+        if (node == null) {
+            return;
+        }
         System.out.println("Clave: " + node.key + ", Valor: " + node.val);
         if (node.left != null) {
-            System.out.println("    Hijo izquierdo: " + node.left.key + "-" +String.valueOf((char) (int) node.left.key));
+            System.out.println("    Hijo izquierdo: " + node.left.key + "-" + String.valueOf((char) (int) node.left.key));
         } else {
             System.out.println("    Hijo izquierdo: null");
         }
         if (node.right != null) {
-            System.out.println("    Hijo derecho: " + node.right.key + "-" +String.valueOf((char) (int) node.right.key));
+            System.out.println("    Hijo derecho: " + node.right.key + "-" + String.valueOf((char) (int) node.right.key));
         } else {
             System.out.println("    Hijo derecho: null");
         }

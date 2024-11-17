@@ -20,34 +20,32 @@ public class InterfazApp {
 
     public static void main(String[] args) {
 //        String entrada = "data/anitaPatina";
-        String entrada = "C:\\\\Users\\\\tomas\\\\Downloads\\\\entrada.mp4";
-        readFile(entrada);
+        String entrada = "C:\\\\Users\\\\tomas\\\\Downloads\\\\entrada.opus";
+        leerArchivo(entrada);
     }
 
     /**
      * Lee el archivo y lo convierte en .pkz
      *
-     * @param File Ruta de lectura
+     * @param archivo Ruta de lectura
      */
-    public static void readFile(String File) {
+    public static void leerArchivo(String archivo) {
         try {
 
             //Input de lectura del txt
-            InputStream input = new BufferedInputStream(new FileInputStream(File));
+            InputStream input = new BufferedInputStream(new FileInputStream(archivo));
             //Output de escritura del .pkz
-            OutputStream output = new BufferedOutputStream(new FileOutputStream(File.replaceAll("entrada","salida") + ".pkz"));
+            OutputStream output = new BufferedOutputStream(new FileOutputStream(archivo.replaceAll("entrada", "salida") + ".pkz"));
             //Inicialización de Variables
             System.out.println("Comprimiendo el archivo...");
             String entrada = "", binario = "";
-            int BS, NF;
+            int BS, NF, ascii;
             HashMap<Integer, Integer> mapa = new HashMap<>();
             ArrayList<Integer> arrayArbol;
             ArbolBinario arbol;
-            int ascii = input.read();
-
-            /**
-             * Ciclo de lectura hasta que no hayan más caracteres
-             */
+            ascii = input.read();
+            //Ciclo de lectura hasta que no hayan más caracteres
+            //Insertar los valores a la tabla hash
             while (ascii != -1) {
                 //Se llena la tabla hash con el número de veces que se repite el byte
                 if (mapa.containsKey(ascii)) {
@@ -66,10 +64,10 @@ public class InterfazApp {
             //Se crea el arbol de frecuencia
             arbol = crearArbol(listaOrdenada).get(0);
             //Calcular Nodos Frecuencia
-            NF = arbol.NF();
+            NF = mapa.size() - 1;
             System.out.println("NF: " + NF);
-            System.out.println("-------------------------------------");
             output.write((byte) NF);
+            System.out.println("-------------------------------------");
             arrayArbol = arbol.arbolList();
 
             for (int i = 0; i < arrayArbol.size(); i++) {
@@ -100,9 +98,9 @@ public class InterfazApp {
             }
             System.out.println(binario);
             for (int i = 0; i < binario.length() - 7; i += 8) {
-                    System.out.println(binario.substring(i, i + 8));
-                    System.out.println((int) Integer.parseInt(binario.substring(i, i + 8), 2));
-                    output.write((byte) Integer.parseInt(binario.substring(i, i + 8), 2));
+                System.out.println(binario.substring(i, i + 8));
+                System.out.println((int) Integer.parseInt(binario.substring(i, i + 8), 2));
+                output.write((byte) Integer.parseInt(binario.substring(i, i + 8), 2));
             }
             output.flush();
         } catch (IOException e) {
@@ -139,16 +137,8 @@ public class InterfazApp {
             suma.put(-1, (int) (entradaizq.rootVal() + entradader.rootVal()));
             //Dependiendo de si son valores o ya resultados que dan un nodo sin hijos
             //Se ingresa en orden
-            if (entradaizq.rootKey() == -1 && entradader.rootKey() == -1) {
-                suma.put(entradaizq.root());
-                suma.put(entradader.root());
-            } else if (entradaizq.rootKey() == -1 && entradader.rootKey() != -1) {
-                suma.put(entradader.root());
-                suma.put(entradaizq.root());
-            } else {
-                suma.put(entradaizq.root());
-                suma.put(entradader.root());
-            }
+            suma.put(entradaizq.root());
+            suma.put(entradader.root());
             //Eliminar los dos nodos que se acaban de agrupar
             listArbol.remove(listArbol.get(0));
             listArbol.remove(listArbol.get(0));
